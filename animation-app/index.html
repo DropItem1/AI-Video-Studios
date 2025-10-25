@@ -2,30 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Test Animation</title>
-</head>
-<body>
-  <h1>🎨 Test Ball</h1>
-  <canvas id="myCanvas" width="300" height="300" style="border:1px solid black;"></canvas>
-
-  <script>
-    const canvas = document.getElementById('myCanvas');
-    const ctx = canvas.getContext('2d');
-
-    // Draw a single circle in the center
-    ctx.beginPath();
-    ctx.arc(150, 150, 50, 0, Math.PI * 2); // x=150, y=150, radius=50
-    ctx.fillStyle = "red";
-    ctx.fill();
-    ctx.closePath();
-  </script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
   <title>Bouncing Ball</title>
 </head>
 <body>
@@ -36,35 +12,31 @@
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
 
-    let x = 50;      // starting x position
-    let y = 50;      // starting y position
-    let dx = 3;      // speed in x
-    let dy = 3;      // speed in y
-    let radius = 20; // size of the ball
+    let x = 50;
+    let y = 50;
+    let dx = 3;
+    let dy = 3;
+    let radius = 20;
 
     function draw() {
-      // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw the ball
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = "blue";
+      ctx.fillStyle = "blue"; // THIS MAKES THE BALL BLUE
       ctx.fill();
       ctx.closePath();
 
-      // Update ball position
       x += dx;
       y += dy;
 
-      // Bounce off walls
       if (x + radius > canvas.width || x - radius < 0) dx = -dx;
       if (y + radius > canvas.height || y - radius < 0) dy = -dy;
 
-      requestAnimationFrame(draw); // loop
+      requestAnimationFrame(draw);
     }
 
-    draw(); // start the animation
+    draw();
   </script>
 </body>
 </html>
