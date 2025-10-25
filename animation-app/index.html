@@ -21,3 +21,50 @@
   </script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bouncing Ball</title>
+</head>
+<body>
+  <h1>🎨 Bouncing Ball</h1>
+  <canvas id="myCanvas" width="300" height="300" style="border:1px solid black;"></canvas>
+
+  <script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let x = 50;      // starting x position
+    let y = 50;      // starting y position
+    let dx = 3;      // speed in x
+    let dy = 3;      // speed in y
+    let radius = 20; // size of the ball
+
+    function draw() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the ball
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = "blue";
+      ctx.fill();
+      ctx.closePath();
+
+      // Update ball position
+      x += dx;
+      y += dy;
+
+      // Bounce off walls
+      if (x + radius > canvas.width || x - radius < 0) dx = -dx;
+      if (y + radius > canvas.height || y - radius < 0) dy = -dy;
+
+      requestAnimationFrame(draw); // loop
+    }
+
+    draw(); // start the animation
+  </script>
+</body>
+</html>
