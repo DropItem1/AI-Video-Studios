@@ -2,3 +2,6 @@ npm create vite@latest .
 
 npm install
 npm run dev
+
+cd ~/path/to/animation-app
+streamlit run app.py
