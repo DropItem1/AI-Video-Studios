@@ -2,48 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🎨 My Animation App</title>
-  <style>
-    body {
-      text-align: center;
-      font-family: sans-serif;
-    }
-    canvas {
-      border: 1px solid black;
-      margin-top: 20px;
-    }
-  </style>
+  <title>Test Animation</title>
 </head>
 <body>
-  <h1>🎨 My Animation App</h1>
-  <canvas id="myCanvas" width="500" height="500"></canvas>
+  <h1>🎨 Test Ball</h1>
+  <canvas id="myCanvas" width="300" height="300" style="border:1px solid black;"></canvas>
 
   <script>
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
-    let x = 50;
-    let y = 50;
-    let dx = 2;
-    let dy = 2;
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-      ctx.arc(x, y, 20, 0, Math.PI * 2);
-      ctx.fillStyle = "blue";
-      ctx.fill();
-      ctx.closePath();
-
-      x += dx;
-      y += dy;
-
-      if (x + 20 > canvas.width || x - 20 < 0) dx = -dx;
-      if (y + 20 > canvas.height || y - 20 < 0) dy = -dy;
-
-      requestAnimationFrame(draw);
-    }
-
-    draw();
+    // Draw a single circle in the center
+    ctx.beginPath();
+    ctx.arc(150, 150, 50, 0, Math.PI * 2); // x=150, y=150, radius=50
+    ctx.fillStyle = "red";
+    ctx.fill();
+    ctx.closePath();
   </script>
 </body>
 </html>
