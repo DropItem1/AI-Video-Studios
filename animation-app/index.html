@@ -2,41 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bouncing Ball</title>
+  <title>3D Bouncing Ball</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+      background: rgba(255,255,255,0.8);
+      padding: 10px;
+      border-radius: 5px;
+    }
+    button { margin-right: 5px; }
+  </style>
 </head>
 <body>
-  <h1>🎨 Bouncing Ball</h1>
-  <canvas id="myCanvas" width="300" height="300" style="border:1px solid black;"></canvas>
+  <div id="controls">
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
+  </div>
 
-  <script>
-    const canvas = document.getElementById('myCanvas');
-    const ctx = canvas.getContext('2d');
-
-    let x = 50;
-    let y = 50;
-    let dx = 3;
-    let dy = 3;
-    let radius = 20;
-
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = "blue"; // THIS MAKES THE BALL BLUE
-      ctx.fill();
-      ctx.closePath();
-
-      x += dx;
-      y += dy;
-
-      if (x + radius > canvas.width || x - radius < 0) dx = -dx;
-      if (y + radius > canvas.height || y - radius < 0) dy = -dy;
-
-      requestAnimationFrame(draw);
-    }
-
-    draw();
-  </script>
-</body>
-</html>
+  <!-- Load Three.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.162.0/b
