@@ -2,27 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Bouncing Ball</title>
-  <style>
-    body { margin: 0; overflow: hidden; }
-    canvas { display: block; }
-    #controls {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 10;
-      background: rgba(255,255,255,0.8);
-      padding: 10px;
-      border-radius: 5px;
-    }
-    button { margin-right: 5px; }
-  </style>
+  <title>3D Rotating Bouncing Ball</title>
+  <style>body{margin:0;overflow:hidden;}canvas{display:block;}</style>
 </head>
 <body>
-  <div id="controls">
-    <button id="startBtn">Start</button>
-    <button id="stopBtn">Stop</button>
-  </div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.min.js"></script>
+<script>
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-  <!-- Load Three.js from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.162.0/b
+  // Ball
+  const geometry = new THREE.SphereGeometry(1, 32, 32);
+  const material = new THREE.MeshPhongMaterial({color:0x0077ff});
+  const ball = new THREE.Mesh(geometry, material);
+  scene.add(ball);
+
+  // Light
+  const light = new THREE.PointLight(0xffffff, 1);
+  light.position.set(5,5,5);
+  scene.add(light);
+
+  camera.position.z = 5;
+
+  let dx=0.05, dy=0.04, dz=0.03;
+
+  function animate(){
+    requestAnimationFrame(animate);
+
+    ball.position.x += dx;
+    ball.position.y += dy;
+    ball.position.z += dz;
+
+    // Bounce in all directions
+    if(ball.position.x>3 || ball.position.x<-3) dx=-dx;
+    if(ball.position.y>3 || ball.position.y<-3) dy=-dy;
+    if(ball.position.z>3 || ball.position.z<-3) dz=-dz;
+
+    // Add rotation for 3D effect
+    ball.rotation.x += 0.05;
+    ball.rotation.y += 0.05;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+  window.addEventListener('resize',()=>{
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+</body>
+</html>
