@@ -1,34 +1,23 @@
+import streamlit as st
+import streamlit.components.v1 as components
+
+st.set_page_config(page_title="3D Bouncing Ball", layout="wide")
+
+st.title("🎨 3D Bouncing Ball in Streamlit")
+
+# Directly embed HTML (instead of opening a file)
+html_code = """
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>3D Cinematic Bouncing Ball</title>
     <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: black;
-      }
-      #controls {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 10;
-      }
-      button {
-        padding: 8px 14px;
-        margin-right: 6px;
-        border: none;
-        border-radius: 6px;
-        background-color: white;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      canvas {
-        display: block;
-      }
+      html, body { margin: 0; padding: 0; overflow: hidden; background-color: black; }
+      #controls { position: fixed; top: 10px; left: 10px; z-index: 10; }
+      button { padding: 8px 14px; margin-right: 6px; border: none; border-radius: 6px;
+               background-color: white; cursor: pointer; font-size: 14px; }
+      canvas { display: block; }
     </style>
   </head>
   <body>
@@ -39,4 +28,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
     <script>
-      let scene, camera, renderer, sphere, cube, light,
+      let scene, camera, renderer, sphere, cube, light, floor;
+      let isAnimating = false;
+      let velocity = 0.05;
+      let direction = 1;
+      let angle = 0;
+
+      function init() {
+        scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x000000, 10, 40);
+
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        const spher
