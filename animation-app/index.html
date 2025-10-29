@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>3D Bouncing Ball</title>
     <style>
       body {
@@ -9,7 +9,8 @@
         overflow: hidden;
         background-color: black;
       }
-      #startBtn, #stopBtn {
+      #startBtn,
+      #stopBtn {
         position: absolute;
         top: 10px;
         left: 10px;
@@ -37,6 +38,7 @@
       let isAnimating = false;
       let velocity = 0.05;
       let direction = 1;
+      let angle = 0;
 
       function init() {
         scene = new THREE.Scene();
@@ -46,31 +48,52 @@
           0.1,
           1000
         );
+
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000); // black background
+        renderer.setClearColor(0x000000);
         document.body.appendChild(renderer.domElement);
 
         const geometry = new THREE.SphereGeometry(1, 32, 32);
-        const material = new THREE.MeshStandardMaterial({ color: 0x0000ff });
+        const material = new THREE.MeshStandardMaterial({
+          color: 0x0077ff,
+          roughness: 0.4,
+          metalness: 0.3,
+        });
         sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
 
-        const light = new THREE.PointLight(0xffffff, 1, 100);
-        light.position.set(5, 5, 5);
+        const ambient = new THREE.AmbientLight(0x404040);
+        scene.add(ambient);
+
+        const light = new THREE.PointLight(0xffffff, 1.5, 100);
         scene.add(light);
 
-        camera.position.z = 5;
+        camera.position.set(0, 2, 5);
+        camera.lookAt(0, 0, 0);
+
+        // store reference for lighting update
+        camera.userData.light = light;
       }
 
       function animate() {
         if (!isAnimating) return;
         animationId = requestAnimationFrame(animate);
-        sphere.position.y += velocity * direction;
 
+        // bounce
+        sphere.position.y += velocity * direction;
         if (sphere.position.y > 2 || sphere.position.y < -2) {
-          direction *= -1; // bounce
+          direction *= -1;
         }
+
+        // rotate camera around
+        angle += 0.01;
+        camera.position.x = 5 * Math.sin(angle);
+        camera.position.z = 5 * Math.cos(angle);
+        camera.lookAt(sphere.position);
+
+        // keep light following camera
+        camera.userData.light.position.copy(camera.position);
 
         renderer.render(scene, camera);
       }
