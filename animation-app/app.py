@@ -112,3 +112,34 @@ window.addEventListener('resize', ()=>{
 """
 
 components.html(html_code, height=700, scrolling=False)
+
+let time = 0;
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    time += 1; // increment time/frame counter
+
+    // Cutscene 1: wide shot
+    if(time < 200){
+        camera.position.set(0, 5, 10);
+        camera.lookAt(sphere.position);
+    }
+    // Cutscene 2: closer angle
+    else if(time < 400){
+        camera.position.set(3, 2, 5);
+        camera.lookAt(sphere.position);
+    }
+    // Cutscene 3: overhead
+    else if(time < 600){
+        camera.position.set(0, 10, 0);
+        camera.lookAt(sphere.position);
+    }
+
+    // Ball animation
+    sphere.position.y += velocity*direction;
+    if(sphere.position.y>2 || sphere.position.y<-2) direction*=-1;
+
+    renderer.render(scene,camera);
+}
+
