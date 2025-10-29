@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>3D Bouncing Ball</title>
+    <title>3D Cinematic Bouncing Ball</title>
     <style>
       html,
       body {
@@ -39,86 +39,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
     <script>
-      let scene, camera, renderer, sphere, light;
-      let isAnimating = false;
-      let velocity = 0.05;
-      let direction = 1;
-      let angle = 0;
-
-      function init() {
-        // scene setup
-        scene = new THREE.Scene();
-
-        camera = new THREE.PerspectiveCamera(
-          75,
-          window.innerWidth / window.innerHeight,
-          0.1,
-          1000
-        );
-
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000);
-        document.body.appendChild(renderer.domElement);
-
-        // geometry + material
-        const geometry = new THREE.SphereGeometry(1, 32, 32);
-        const material = new THREE.MeshStandardMaterial({
-          color: 0x0077ff,
-          roughness: 0.3,
-          metalness: 0.6,
-        });
-        sphere = new THREE.Mesh(geometry, material);
-        scene.add(sphere);
-
-        // lights
-        light = new THREE.PointLight(0xffffff, 2);
-        light.position.set(5, 5, 5);
-        scene.add(light);
-
-        const ambient = new THREE.AmbientLight(0x222222);
-        scene.add(ambient);
-
-        camera.position.set(0, 2, 6);
-        camera.lookAt(0, 0, 0);
-
-        renderer.render(scene, camera); // draw first frame
-      }
-
-      function animate() {
-        if (!isAnimating) return;
-        requestAnimationFrame(animate);
-
-        sphere.position.y += velocity * direction;
-        if (sphere.position.y > 2 || sphere.position.y < -2) direction *= -1;
-
-        angle += 0.01;
-        camera.position.x = 6 * Math.sin(angle);
-        camera.position.z = 6 * Math.cos(angle);
-        camera.lookAt(sphere.position);
-
-        light.position.copy(camera.position);
-        renderer.render(scene, camera);
-      }
-
-      document.getElementById("startBtn").onclick = () => {
-        if (!isAnimating) {
-          isAnimating = true;
-          animate();
-        }
-      };
-
-      document.getElementById("stopBtn").onclick = () => {
-        isAnimating = false;
-      };
-
-      window.addEventListener("resize", () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-
-      init();
-    </script>
-  </body>
-</html>
+      let scene, camera, renderer, sphere, cube, light,
