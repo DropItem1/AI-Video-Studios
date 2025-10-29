@@ -9,7 +9,7 @@ html_code = """
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 <script>
-let scene, camera, renderer, sphere, cube, light;
+let scene, camera, renderer, sphere, light, floor;
 let isAnimating = false;
 let velocity = 0.05;
 let direction = 1;
@@ -18,29 +18,32 @@ let angle = 0;
 function init() {
     const container = document.getElementById('container');
 
-    scene = new THREE.Scene(); // no fog
+    scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x000000, 10, 40); // keeps cinematic depth
 
     camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // alpha true for transparency
+    renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setClearColor(0x000000); // black background
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
-    // Sphere
+    // Sphere (the bouncing ball)
     const sphereGeo = new THREE.SphereGeometry(1, 32, 32);
     const sphereMat = new THREE.MeshStandardMaterial({ color: 0x0077ff, roughness:0.3, metalness:0.6 });
     sphere = new THREE.Mesh(sphereGeo, sphereMat);
     sphere.castShadow = true;
     scene.add(sphere);
 
-    // Cube
-    const cubeGeo = new THREE.BoxGeometry(0.7,0.7,0.7);
-    const cubeMat = new THREE.MeshStandardMaterial({ color:0xff3333, roughness:0.8, metalness:0.2 });
-    cube = new THREE.Mesh(cubeGeo, cubeMat);
-    cube.position.set(2,0.5,0);
-    cube.castShadow = true;
-    scene.add(cube);
+    // Floor
+    const floorGeo = new THREE.PlaneGeometry(30,30);
+    const floorMat = new THREE.MeshStandardMaterial({ color:0x111111, roughness:1 });
+    floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI/2;
+    floor.position.y=-2.5;
+    floor.receiveShadow = true;
+    scene.add(floor);
 
     // Lights
     const ambient = new THREE.AmbientLight(0x404040);
@@ -63,12 +66,11 @@ function animate() {
     if(!isAnimating) return;
     requestAnimationFrame(animate);
 
+    // Ball bounce
     sphere.position.y += velocity*direction;
     if(sphere.position.y>2 || sphere.position.y<-2) direction*=-1;
 
-    cube.rotation.x +=0.02;
-    cube.rotation.y +=0.02;
-
+    // Camera orbit
     angle +=0.01;
     camera.position.x = 8*Math.sin(angle);
     camera.position.z = 8*Math.cos(angle);
