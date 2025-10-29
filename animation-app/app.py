@@ -12,6 +12,7 @@ html_path = os.path.join(base_path, "index.html")
 try:
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
+        components.html(html_code, height=700, scrolling=False, sandbox=None)
     components.html(html_content, height=600, scrolling=True)
 except FileNotFoundError:
     st.error(f"Could not find index.html at: {html_path}")
