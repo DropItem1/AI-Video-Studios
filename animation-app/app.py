@@ -9,7 +9,7 @@ html_code = """
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 <script>
-let scene, camera, renderer, sphere, cube, light, floor;
+let scene, camera, renderer, sphere, cube, light;
 let isAnimating = false;
 let velocity = 0.05;
 let direction = 1;
@@ -22,7 +22,7 @@ function init() {
 
     camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // alpha true for transparency
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
@@ -41,15 +41,6 @@ function init() {
     cube.position.set(2,0.5,0);
     cube.castShadow = true;
     scene.add(cube);
-
-    // Floor
-    const floorGeo = new THREE.PlaneGeometry(30,30);
-    const floorMat = new THREE.MeshStandardMaterial({ color:0x111111, roughness:1 });
-    floor = new THREE.Mesh(floorGeo, floorMat);
-    floor.rotation.x = -Math.PI/2;
-    floor.position.y=-2.5;
-    floor.receiveShadow = true;
-    scene.add(floor);
 
     // Lights
     const ambient = new THREE.AmbientLight(0x404040);
