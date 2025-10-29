@@ -4,44 +4,51 @@
     <meta charset="UTF-8" />
     <title>3D Bouncing Ball</title>
     <style>
+      html,
       body {
         margin: 0;
+        padding: 0;
         overflow: hidden;
         background-color: black;
       }
-      #startBtn,
-      #stopBtn {
-        position: absolute;
+      #controls {
+        position: fixed;
         top: 10px;
         left: 10px;
-        margin-right: 10px;
         z-index: 10;
-        padding: 8px 12px;
-        background: white;
+      }
+      button {
+        padding: 8px 14px;
+        margin-right: 6px;
         border: none;
-        border-radius: 8px;
+        border-radius: 6px;
+        background-color: white;
         cursor: pointer;
         font-size: 14px;
       }
-      #stopBtn {
-        left: 90px;
+      canvas {
+        display: block;
       }
     </style>
   </head>
   <body>
-    <button id="startBtn">Start</button>
-    <button id="stopBtn">Stop</button>
+    <div id="controls">
+      <button id="startBtn">Start</button>
+      <button id="stopBtn">Stop</button>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
     <script>
-      let scene, camera, renderer, sphere, animationId;
+      let scene, camera, renderer, sphere, light;
       let isAnimating = false;
       let velocity = 0.05;
       let direction = 1;
       let angle = 0;
 
       function init() {
+        // scene setup
         scene = new THREE.Scene();
+
         camera = new THREE.PerspectiveCamera(
           75,
           window.innerWidth / window.innerHeight,
@@ -54,47 +61,43 @@
         renderer.setClearColor(0x000000);
         document.body.appendChild(renderer.domElement);
 
+        // geometry + material
         const geometry = new THREE.SphereGeometry(1, 32, 32);
         const material = new THREE.MeshStandardMaterial({
           color: 0x0077ff,
-          roughness: 0.4,
-          metalness: 0.3,
+          roughness: 0.3,
+          metalness: 0.6,
         });
         sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
 
-        const ambient = new THREE.AmbientLight(0x404040);
-        scene.add(ambient);
-
-        const light = new THREE.PointLight(0xffffff, 1.5, 100);
+        // lights
+        light = new THREE.PointLight(0xffffff, 2);
+        light.position.set(5, 5, 5);
         scene.add(light);
 
-        camera.position.set(0, 2, 5);
+        const ambient = new THREE.AmbientLight(0x222222);
+        scene.add(ambient);
+
+        camera.position.set(0, 2, 6);
         camera.lookAt(0, 0, 0);
 
-        // store reference for lighting update
-        camera.userData.light = light;
+        renderer.render(scene, camera); // draw first frame
       }
 
       function animate() {
         if (!isAnimating) return;
-        animationId = requestAnimationFrame(animate);
+        requestAnimationFrame(animate);
 
-        // bounce
         sphere.position.y += velocity * direction;
-        if (sphere.position.y > 2 || sphere.position.y < -2) {
-          direction *= -1;
-        }
+        if (sphere.position.y > 2 || sphere.position.y < -2) direction *= -1;
 
-        // rotate camera around
         angle += 0.01;
-        camera.position.x = 5 * Math.sin(angle);
-        camera.position.z = 5 * Math.cos(angle);
+        camera.position.x = 6 * Math.sin(angle);
+        camera.position.z = 6 * Math.cos(angle);
         camera.lookAt(sphere.position);
 
-        // keep light following camera
-        camera.userData.light.position.copy(camera.position);
-
+        light.position.copy(camera.position);
         renderer.render(scene, camera);
       }
 
@@ -107,7 +110,6 @@
 
       document.getElementById("stopBtn").onclick = () => {
         isAnimating = false;
-        cancelAnimationFrame(animationId);
       };
 
       window.addEventListener("resize", () => {
